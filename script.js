@@ -5,56 +5,64 @@ const operator = ["+", "-", "*", "/", "=", "del", "c"];
 
 clearInput();
 
-for (let i = 0; i < 10; i++) {
-  const button = document.createElement("button");
-  button.textContent = i;
-  button.addEventListener("click", () => {
-    inputNumber(i);
-  });
+generateNumberButtons();
 
-  numberButtonPanel.appendChild(button);
+generateOperatorButtons();
+
+function generateOperatorButtons() {
+  operator.forEach((i) => {
+    const button = document.createElement("button");
+    button.textContent = i;
+    switch (i) {
+      case "+":
+        button.addEventListener("click", () => {
+          inputOperator("+");
+        });
+        break;
+      case "-":
+        button.addEventListener("click", () => {
+          inputOperator("-");
+        });
+        break;
+      case "*":
+        button.addEventListener("click", () => {
+          inputOperator("*");
+        });
+        break;
+      case "/":
+        button.addEventListener("click", () => {
+          inputOperator("/");
+        });
+        break;
+      case "=":
+        button.addEventListener("click", getResult);
+        break;
+      case "del":
+        button.addEventListener("click", deleteLastInput);
+        break;
+      case "c":
+        button.addEventListener("click", clearInput);
+        break;
+
+      default:
+        break;
+    }
+
+    operatorButtonPanel.appendChild(button);
+  });
 }
 
-operator.forEach((i) => {
-  const button = document.createElement("button");
-  button.textContent = i;
-  switch (i) {
-    case "+":
-      button.addEventListener("click", () => {
-        inputOperator("+");
-      });
-      break;
-    case "-":
-      button.addEventListener("click", () => {
-        inputOperator("-");
-      });
-      break;
-    case "*":
-      button.addEventListener("click", () => {
-        inputOperator("*");
-      });
-      break;
-    case "/":
-      button.addEventListener("click", () => {
-        inputOperator("/");
-      });
-      break;
-    case "=":
-      button.addEventListener("click", getResult);
-      break;
-    case "del":
-      button.addEventListener("click", deleteLastInput);
-      break;
-    case "c":
-      button.addEventListener("click", clearInput);
-      break;
+function generateNumberButtons() {
+  for (let i = 0; i < 10; i++) {
+    const button = document.createElement("button");
+    button.textContent = i;
+    button.addEventListener("click", () => {
+      inputNumber(i);
+    });
 
-    default:
-      break;
+    numberButtonPanel.appendChild(button);
   }
-
-  operatorButtonPanel.appendChild(button);
-});
+}
 
 function clearInput() {
   screenPanel.value = 0;
@@ -96,7 +104,11 @@ function deleteLastInput() {
 function inputOperator(operatorStr) {
   const lastInput = screenPanel.value[screenPanel.value.length - 1];
 
-  if (operator.includes(lastInput)) deleteLastInput();
+  if (
+    operator.includes(lastInput) ||
+    (+screenPanel.value[0] === 0 && operatorStr === "-")
+  )
+    deleteLastInput();
   screenPanel.value += operatorStr;
 }
 
