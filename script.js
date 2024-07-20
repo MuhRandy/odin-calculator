@@ -6,7 +6,7 @@ for (let i = 0; i < 10; i++) {
   const button = document.createElement("button");
   button.textContent = i;
   button.addEventListener("click", () => {
-    screenPanel.textContent += i;
+    screenPanel.value += i;
   });
 
   numberButtonPanel.appendChild(button);
@@ -39,7 +39,7 @@ operator.forEach((i) => {
       });
       break;
     case "=":
-      button.id = "result";
+      button.addEventListener("click", getResult);
       break;
     case "del":
       button.addEventListener("click", deleteLastInput);
@@ -52,18 +52,42 @@ operator.forEach((i) => {
   operatorButtonPanel.appendChild(button);
 });
 
+function getResult() {
+  const input = screenPanel.value;
+  const number = input.split(/[*+/-]/).map((i) => +i);
+  const operatorInput = input.split("").filter((i) => operator.includes(i));
+  const operators = ["+", "-", "/", "*"];
+
+  while (operatorInput.length > 0) {
+    const lastOperators = operators.pop();
+    let operatorIndex = operatorInput.findIndex((i) => i === lastOperators);
+
+    while (operatorIndex !== -1) {
+      const currentOperator = operatorInput.splice(operatorIndex, 1)[0];
+      const nums = number.splice(operatorIndex, 2);
+      const result = operate(...nums, currentOperator);
+
+      number.splice(operatorIndex, 0, result);
+
+      operatorIndex = operatorInput.findIndex((i) => i === lastOperators);
+    }
+  }
+
+  screenPanel.value = number[0];
+}
+
 function deleteLastInput() {
-  const content = [...screenPanel.textContent];
+  const content = [...screenPanel.value];
   content.splice(-1, 1);
 
-  screenPanel.textContent = content.join("");
+  screenPanel.value = content.join("");
 }
 
 function inputOperator(operatorStr) {
-  const lastInput = screenPanel.textContent[screenPanel.textContent.length - 1];
+  const lastInput = screenPanel.value[screenPanel.value.length - 1];
 
   if (operator.includes(lastInput)) deleteLastInput();
-  screenPanel.textContent += operatorStr;
+  screenPanel.value += operatorStr;
 }
 
 function add(numA, numB) {
@@ -83,21 +107,24 @@ function divide(numA, numB) {
 }
 
 function operate(numA, numB, operator) {
+  let result = 0;
   switch (operator) {
     case "+":
-      add(numA, numB);
+      result = add(numA, numB);
       break;
     case "-":
-      substract(numA, numB);
+      result = substract(numA, numB);
       break;
     case "*":
-      multiply(numA, numB);
+      result = multiply(numA, numB);
       break;
     case "/":
-      divide(numA, numB);
+      result = divide(numA, numB);
       break;
 
     default:
       break;
   }
+
+  return result;
 }
