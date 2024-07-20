@@ -1,7 +1,9 @@
 const numberButtonPanel = document.querySelector(".number");
 const operatorButtonPanel = document.querySelector(".operator");
 const screenPanel = document.querySelector(".screen-panel");
-const operator = ["+", "-", "*", "/", "=", "del"];
+const operator = ["+", "-", "*", "/", "=", "del", "c"];
+
+clearInput();
 
 for (let i = 0; i < 10; i++) {
   const button = document.createElement("button");
@@ -43,6 +45,9 @@ operator.forEach((i) => {
     case "del":
       button.addEventListener("click", deleteLastInput);
       break;
+    case "c":
+      button.addEventListener("click", clearInput);
+      break;
 
     default:
       break;
@@ -50,6 +55,10 @@ operator.forEach((i) => {
 
   operatorButtonPanel.appendChild(button);
 });
+
+function clearInput() {
+  screenPanel.value = 0;
+}
 
 function getResult() {
   if (operator.includes(screenPanel.value.at(-1))) return;
