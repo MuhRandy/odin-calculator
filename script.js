@@ -7,15 +7,7 @@ for (let i = 0; i < 10; i++) {
   const button = document.createElement("button");
   button.textContent = i;
   button.addEventListener("click", () => {
-    if (+screenPanel.value === 0 && screenPanel.value.length === 1)
-      deleteLastInput();
-
-    if (
-      screenPanel.value.at(-1) == 0 &&
-      operator.includes(screenPanel.value.at(-2))
-    )
-      deleteLastInput();
-    screenPanel.value += i;
+    inputNumber(i);
   });
 
   numberButtonPanel.appendChild(button);
@@ -60,6 +52,8 @@ operator.forEach((i) => {
 });
 
 function getResult() {
+  if (operator.includes(screenPanel.value.at(-1))) return;
+
   const input = screenPanel.value;
   const number = input.split(/[*+/-]/).map((i) => +i);
   const operatorInput = input.split("").filter((i) => operator.includes(i));
@@ -95,6 +89,19 @@ function inputOperator(operatorStr) {
 
   if (operator.includes(lastInput)) deleteLastInput();
   screenPanel.value += operatorStr;
+}
+
+function inputNumber(num) {
+  if (+screenPanel.value === 0 && screenPanel.value.length === 1)
+    deleteLastInput();
+
+  if (
+    screenPanel.value.at(-1) == 0 &&
+    operator.includes(screenPanel.value.at(-2))
+  )
+    deleteLastInput();
+
+  screenPanel.value += num;
 }
 
 function add(numA, numB) {
