@@ -1,18 +1,25 @@
 const numberButtonPanel = document.querySelector(".number");
 const operatorButtonPanel = document.querySelector(".operator");
 const screenPanel = document.querySelector(".screen-panel");
+const operator = ["+", "-", "*", "/", "=", "del"];
 
 for (let i = 0; i < 10; i++) {
   const button = document.createElement("button");
   button.textContent = i;
   button.addEventListener("click", () => {
+    if (+screenPanel.value === 0 && screenPanel.value.length === 1)
+      deleteLastInput();
+
+    if (
+      screenPanel.value.at(-1) == 0 &&
+      operator.includes(screenPanel.value.at(-2))
+    )
+      deleteLastInput();
     screenPanel.value += i;
   });
 
   numberButtonPanel.appendChild(button);
 }
-
-const operator = ["+", "-", "*", "/", "=", "del"];
 
 operator.forEach((i) => {
   const button = document.createElement("button");
