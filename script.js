@@ -1,8 +1,9 @@
 const numberButtonPanel = document.querySelector(".number");
 const operatorButtonPanel = document.querySelector(".operator");
+const otherButtonPanel = document.querySelector(".other");
 const screenPanel = document.querySelector(".screen-panel");
 const operator = ["+", "-", "*", "/"];
-const other = ["del", "c", ".", "="];
+const other = ["c", "del", ".", "="];
 
 clearInput();
 
@@ -28,16 +29,18 @@ function generateOtherButtons() {
         button.addEventListener("click", clearInput);
         break;
       case ".":
-        button.addEventListener("click", () => {
-          inputOperator(".");
-        });
+        button.addEventListener("click", () => inputOperator("."));
         break;
 
       default:
         break;
     }
 
-    operatorButtonPanel.appendChild(button);
+    if (i === "." || i === "=") {
+      numberButtonPanel.appendChild(button);
+    } else {
+      otherButtonPanel.appendChild(button);
+    }
   });
 }
 
@@ -47,24 +50,16 @@ function generateOperatorButtons() {
     button.textContent = i;
     switch (i) {
       case "+":
-        button.addEventListener("click", () => {
-          inputOperator("+");
-        });
+        button.addEventListener("click", () => inputOperator("+"));
         break;
       case "-":
-        button.addEventListener("click", () => {
-          inputOperator("-");
-        });
+        button.addEventListener("click", () => inputOperator("-"));
         break;
       case "*":
-        button.addEventListener("click", () => {
-          inputOperator("*");
-        });
+        button.addEventListener("click", () => inputOperator("*"));
         break;
       case "/":
-        button.addEventListener("click", () => {
-          inputOperator("/");
-        });
+        button.addEventListener("click", () => inputOperator("/"));
         break;
 
       default:
@@ -76,12 +71,16 @@ function generateOperatorButtons() {
 }
 
 function generateNumberButtons() {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 1; i <= 10; i++) {
     const button = document.createElement("button");
-    button.textContent = i;
-    button.addEventListener("click", () => {
-      inputNumber(i);
-    });
+
+    if (i === 10) {
+      button.textContent = 0;
+      button.addEventListener("click", () => inputNumber(0));
+    } else {
+      button.textContent = i;
+      button.addEventListener("click", () => inputNumber(i));
+    }
 
     numberButtonPanel.appendChild(button);
   }
