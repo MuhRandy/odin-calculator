@@ -95,6 +95,8 @@ function clearInput() {
 }
 
 function getResult() {
+  if (screenPanel.value === "Error") clearInput();
+
   if (operator.includes(screenPanel.value.at(-1))) return;
 
   const input = screenPanel.value;
@@ -133,6 +135,8 @@ function inputOperator(operatorStr) {
   const inputNumber = input.split(/[*+/-]/);
   const lastInputNumber = inputNumber.at(-1);
 
+  if (screenPanel.value === "Error") clearInput();
+
   if (lastInputNumber.includes(".") && operatorStr === ".") return;
 
   const lastInput = input.at(-1);
@@ -147,6 +151,8 @@ function inputOperator(operatorStr) {
 }
 
 function inputNumber(num) {
+  if (screenPanel.value === "Error") clearInput();
+
   if (+screenPanel.value === 0 && screenPanel.value.length === 1)
     deleteLastInput();
 
@@ -188,6 +194,7 @@ function operate(numA, numB, operator) {
       result = multiply(numA, numB);
       break;
     case "/":
+      if (numB === 0) return (result = "Error");
       result = divide(numA, numB);
       break;
 
