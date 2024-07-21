@@ -1,13 +1,45 @@
 const numberButtonPanel = document.querySelector(".number");
 const operatorButtonPanel = document.querySelector(".operator");
 const screenPanel = document.querySelector(".screen-panel");
-const operator = ["+", "-", "*", "/", "=", "del", "c"];
+const operator = ["+", "-", "*", "/"];
+const other = ["del", "c", ".", "="];
 
 clearInput();
 
 generateNumberButtons();
 
 generateOperatorButtons();
+
+generateOtherButtons();
+
+function generateOtherButtons() {
+  other.forEach((i) => {
+    const button = document.createElement("button");
+    button.textContent = i;
+
+    switch (i) {
+      case "=":
+        button.addEventListener("click", getResult);
+        break;
+      case "del":
+        button.addEventListener("click", deleteLastInput);
+        break;
+      case "c":
+        button.addEventListener("click", clearInput);
+        break;
+      case ".":
+        button.addEventListener("click", () => {
+          inputOperator(".");
+        });
+        break;
+
+      default:
+        break;
+    }
+
+    operatorButtonPanel.appendChild(button);
+  });
+}
 
 function generateOperatorButtons() {
   operator.forEach((i) => {
@@ -33,15 +65,6 @@ function generateOperatorButtons() {
         button.addEventListener("click", () => {
           inputOperator("/");
         });
-        break;
-      case "=":
-        button.addEventListener("click", getResult);
-        break;
-      case "del":
-        button.addEventListener("click", deleteLastInput);
-        break;
-      case "c":
-        button.addEventListener("click", clearInput);
         break;
 
       default:
@@ -73,8 +96,10 @@ function getResult() {
 
   const input = screenPanel.value;
   const number = input.split(/[*+/-]/).map((i) => +i);
+
   const operatorInput = input.split("").filter((i) => operator.includes(i));
-  const operators = ["+", "-", "/", "*"];
+
+  const operators = [...operator];
 
   while (operatorInput.length > 0) {
     const lastOperators = operators.pop();
@@ -84,7 +109,6 @@ function getResult() {
       const currentOperator = operatorInput.splice(operatorIndex, 1)[0];
       const nums = number.splice(operatorIndex, 2);
       const result = operate(...nums, currentOperator);
-
       number.splice(operatorIndex, 0, result);
 
       operatorIndex = operatorInput.findIndex((i) => i === lastOperators);
@@ -102,13 +126,20 @@ function deleteLastInput() {
 }
 
 function inputOperator(operatorStr) {
-  const lastInput = screenPanel.value[screenPanel.value.length - 1];
+  const input = screenPanel.value;
+  const inputNumber = input.split(/[*+/-]/);
+  const lastInputNumber = inputNumber.at(-1);
+
+  if (lastInputNumber.includes(".") && operatorStr === ".") return;
+
+  const lastInput = input.at(-1);
 
   if (
     operator.includes(lastInput) ||
     (+screenPanel.value[0] === 0 && operatorStr === "-")
   )
     deleteLastInput();
+
   screenPanel.value += operatorStr;
 }
 
