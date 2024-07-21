@@ -23,7 +23,11 @@ function generateOtherButtons() {
         button.addEventListener("click", getResult);
         break;
       case "del":
-        button.addEventListener("click", deleteLastInput);
+        button.addEventListener("click", () => {
+          screenPanel.value.length === 1
+            ? (screenPanel.value = 0)
+            : deleteLastInput();
+        });
         break;
       case "c":
         button.addEventListener("click", clearInput);
