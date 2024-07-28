@@ -22,9 +22,8 @@ button {
   flex: calc(1 / 4 * 100%);
 }
 
-input:disabled {
+input {
   height: 40px;
-  color: black;
   font-size: large;
 }
 
